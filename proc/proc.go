@@ -13,16 +13,18 @@ type (
 	ProcessManager struct {
 		Ctx    context.Context
 		cancel context.CancelFunc
+		Name   string
 	}
 )
 
-func NewProcessManager() *ProcessManager {
+func NewProcessManager(name string) *ProcessManager {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
 	return &ProcessManager{
 		Ctx:    ctx,
 		cancel: cancel,
+		Name:   name,
 	}
 }
 
@@ -32,9 +34,9 @@ func (proc *ProcessManager) Start() {
 	signal.Notify(sigChan, syscall.SIGINT)  // Handling Ctrl + C
 	signal.Notify(sigChan, syscall.SIGTERM) // Handling Docker stop
 
-	log.Println("Process started. CTRL+C to stop")
+	log.Printf("Process %s started. CTRL+C to stop", proc.Name)
 	<-sigChan
-	log.Println("Process terminating...")
+	log.Printf("Process %s terminating...", proc.Name)
 	proc.cancel()
 	time.Sleep(time.Second)
 	log.Println("Done.")

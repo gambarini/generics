@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	process := proc.NewProcessManager()
+	process := proc.NewProcessManager("main")
 
 	consumerStream := events.NewEventStream[model.CustomerEventData]()
 	orderStream := events.NewEventStream[model.OrderEventData]()
